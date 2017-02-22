@@ -1,0 +1,549 @@
+<head>
+  <title>Exeter</title>
+  <link rel="shortcut icon" href="/book.ico">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+  <div id='nav'>
+    <a href="/"><div class="nav-link"></div></a>
+    <a href="/forms"><div class="nav-link"></div></a>
+    <a href="/search"><div class="nav-link"></div></a>
+  </div>
+  <div id="login-btns">
+         {{> loginButtons}}
+  </div>
+</body>
+
+<template name="Login">
+  <div id="login-container">
+    <img src="/not_logged_in.png" id="login-img">
+  </div>
+</template>
+
+<template name="Home">
+  <div id='home-screen'>
+    <div id="homepage-link-container">
+      <a href="/forms"><div id="homepage-forms"></div></a>
+      <a href="/search"><div id="homepage-stored"></div></a>
+    </div>
+  </div>
+</template>
+
+<template name="Screens"> 
+  <h2 id="role-select-title">Please Select a Role</h2>
+  <select id="role-selector" name="role_selector">
+    <option selected="selected">Select...</option>
+    {{#each items}}
+      {{> RoleSelect}}
+    {{/each}}
+  </select>
+</template>
+
+<template name="RoleSelect">
+  <option value={{poition_name}}>{{position_name}}</option>
+</template>
+
+<template name="ScreensPanel">
+  <div>
+    <table class="table home-dash-table">
+      <th>Name</th>
+      <th>Date Screened</th>
+      <th>Role</th>
+      <th>Prescreen</th>
+      <th></th>
+      <th></th>
+      {{#each items}}
+      {{> CandidateItem}}
+      {{/each}}
+    </table>
+  </div>
+</template>
+
+<template name="CandidateItem">
+  <tr>
+    <td>{{name}}</td>
+    <td>{{created_at}}</td>
+    <td>{{role}}</td>
+    <td><a href="/screens/{{_id}}">http://prn-prescrns01.thefacebook.com/screens/{{_id}}</a></td>
+    <td><button type="button" class="delete">delete</button></td>
+  </tr>
+</template>
+
+<template name="BlankForm">
+  <div id="on-change">
+    <div class="questions">
+      <div class="question-form" id="name-form">
+        <h3>{{position_name}}</h3>
+        <span><img src="/restore1.png" name="restore" class="restore"></span>
+        <p>
+          Candidate Name
+        </p>
+        <input name="name">
+      </div>
+      <div class="question-form" id="prescreen-container">
+        <p>
+          Prescreen Notes
+        </p>
+        <div>
+          <textarea id="prescreen-notes"></textarea>
+        </div>
+      </div>
+      <ul>
+        {{#each section_bundles}}
+          {{> SectionItem}}
+        {{/each}}
+      </ul>
+    </div>
+    <div id="new-id"></div>
+    <div class="save">
+      <button class="submit" name="submit">Submit</button>
+    </div>
+  </div>
+</template>
+
+<template name="SectionItem">
+  <div class="blank-form-section">
+    <h3>{{section}}</h3>
+      {{#each qa_bundle}}
+        {{> QuestionFormItem}}
+      {{/each}}
+  </div>
+</template>
+
+<template name="QuestionFormItem">
+  <div class="question-container">
+    <li class="question-line {{difficulty}}">{{question}}</li>
+    <textarea class="screen-data"></textarea>
+    <p class="correct-answer">Correct Answer: {{correct_answer}}</p>
+    <p class="correctness-text">Did the candidate answer correctly?</p>
+    <div class="correctness-container">
+      <form class="correctness">
+        <input type="radio" name="correctness" value="correct"> Yes<br>
+        <input type="radio" name="correctness" value="incorrect"> No<br>
+        <input type="radio" name="correctness" value="not_asked" checked> I didn't ask
+      </form>
+    </div>
+  </div>
+    <hr>
+</template>
+
+<template name="StoredScreen">
+  <div id="name-container">
+    <div id="name">
+      <h3 id="screen-name-header">Name: </h3>
+      <input id="name-header" value="{{name}}">
+      <h3 id="prescreen-header">Prescreen Notes:</h3>
+      <textarea id="prescreen-notes-display" value="{{prescreen_notes}}"></textarea>
+    </div>
+    <div id="screen-update-btn">
+      <button type="button" name="update_screen">Update Notes</button>
+    </div>
+    <hr style="border-color:black;border-width:2px;margin-left:2%;margin-right:2%;">
+    <div class="question-dash-display">
+      <table class="table">
+        {{#each section_bundles}}
+          {{> ScreenSection}}
+        {{/each}}
+      </table>
+    </div>
+    <hr id="dash-divider">
+    <div class="funnel-container">
+      <h3>Funnel Data</h3>
+      <hr id="funnel-divider">
+      <input type="checkbox" name="offer_bool" id="offer-box"><span id="offer-text">This candidate received an offer</span>
+      <hr id="funnel-divider">
+      <h4>Add New Interview:</h4>
+      <table>
+        <th>Stage</th>
+        <th>Interviewer</th>
+        <th>Rating</th>
+        <th>Confidence</th>
+        <th>Date</th>
+        <tr>
+          <td class="first-int-cell">
+            <img src="/add.png" class="add-interview-btn" name="add_interview">
+            <select class="int-select stage">
+              <option value="Prescreen">Prescreen</option>
+              <option value="Initial">Initial</option>
+              <option value="Follow Up">Follow Up</option>
+              <option value="Onsite - Pirate">Onsite - Pirate</option>
+              <option value="Onsite - Systems">Onsite - Systems</option>
+              <option value="Onsite - Network">Onsite - Network</option>
+              <option value="Onsite - Ninja">Onsite - Ninja</option>
+              <option value="Onsite - Jedi">Onsite - Jedi</option>
+            </select>
+          </td>
+          <td>
+            <select class="int-select interviewer">
+              {{#each items}}
+                <option value={{name}}>{{name}}</option>
+              {{/each}}
+            </select>
+          </td>
+          <td>
+            <select class="int-select rating">
+              <option value="Recommend Follow Up">Recommend Follow Up</option>
+              <option value="Recommend Onsite">Recommend Onsite</option>
+              <option value="Reject">Reject</option>
+              <option value="Hire">Hire</option>
+              <option value="No Hire">No Hire</option>
+            </select>
+          </td>
+          <td>
+            <select class="int-select confidence">
+              <option value="Low Confidence">Low Confidence</option>
+              <option value="Average Confidence">Average Confidence</option>
+              <option value="Highly Confident">Highly Confident</option>
+              <option value="Absolutely Confident">Absolutely Confident</option>
+            </select>
+          </td>
+          <td>
+            <input class="int-select int-date" type="date">
+          </td>
+        </tr>
+      </table>
+      <hr id="funnel-divider">
+      <h4>Past Interviews:</h4>
+      <table class="table-hover int-table">
+        <thead>
+          <tr>
+            <th class="past-header">Stage</th>
+            <th class="past-header">Interviewer</th>
+            <th class="past-header">Rating</th>
+            <th class="past-header">Confidence</th>
+            <th class="past-header">Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each interviews}}
+            <tr>
+              <td>{{stage}}</td>
+              <td>{{interviewer}}</td>
+              <td>{{rating}}</td>
+              <td>{{confidence}}</td>
+              <td>{{int_date}}</td>
+              <td class="remove-int-cell"><img src="/incorrect.png" class="remove-interview" name="delete_int"></td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <div class="stored-interviews">
+        <!-- {{#each interviews}} -->
+
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="ScreenSection">
+  <div class="section dash-section">
+    <h3>{{section}}</h3>
+    <th>Questions</th>
+    <th>Candidate Answer</th>
+    <th></th>
+    {{#each qa_bundle}}
+      <tr class="dash-question-row">
+        <td class="dash-question question-column {{difficulty}}">{{question}}</td>
+        <td class="dash-question answer-column">{{candidate_answer}}</td>
+        <td class="correctness-column"><img src="/{{correctness}}.png" class="correctness-icon"></td>
+      </tr>
+    {{/each}}
+  </div>
+</template>
+
+<template name="ManageForm">
+  <div id="add-question-container">
+    <div class="left">
+      <div id="left-buffer">
+        <div class="update-text">
+          <p class="update-paragraph">Who are the interviewers for this role?</p>
+          <img src="/add.png" class="add-btn" name="add_interviewer"><input id="interviewer">
+          <ul class="interviewer-list">
+            {{#each int_it}}
+              {{> InterviewerItems}}
+            {{/each}}
+          </ul>
+        </div>
+        <div class="update-text">
+          <p class="update-paragraph">Rather than type in your questions, you can also upload a csv to create a form. Your csv file must be in the following format, or nothing will be added.</p>
+          <img src="/csv_img1.png">
+        </div>
+        <div class="csv-container"> 
+          <input type="file" id="csv-file" name="files"/>
+          <button type="submit" class="btn btn-primary btnReadCsv">Read</button>
+        </div>
+      </div>
+    </div>
+    <div class="right">
+      {{#each section_bundles}}
+        {{> Sections}}
+      {{/each}}
+    </div>
+    <div class="add-section">
+      <span name="add_section"><img src="/add_n_sec2.png" class="add-section"></span>
+    </div>
+  </div>
+</template>
+
+<template name="InterviewerItems">
+  <li><img src="/incorrect.png" class="remove-int" name="remove_int">{{name}}</li>
+</template>
+
+<template name="Sections">
+  <div class="section">
+    <input name="new_section" class="section-name" value={{section}}>
+    <span name="remove_section"><img src="/rmv_sec3.png" class="remove-section"></span>
+    <div>
+      <span name="edit_order"><img src="/edit_order2.png" class="edit-order"></span>
+    </div>
+    <h3>Add New Questions</h3>
+    <table class="table question-input-container">
+      <th>Question</th>
+      <th>Correct Answer</th>
+      <tr>
+        <td class="new-question-cell"><textarea name="new_question" class="new-question"></textarea></td>
+        <td class="new-question-cell"><textarea name="new_answer" class="new-question"></textarea><span name="submit_new"><img src="/submit_btn2.png" class="submit-new"></span></td>
+      </tr>
+    </table>
+    <table class="table">
+      <div class="dragula">
+        <th class="question-header">Question</th>
+        <th class="question-header">Correct Answer</th>
+        <th class="question-header">Difficulty</th>
+        <th></th>
+        {{#each qa_bundle}}
+          {{> QuestionItem}}
+        {{/each}}
+      </div>
+    </table>
+  </div>
+</template>
+
+<template name="QuestionItem">
+  <tr class="question-row">
+    <td class="question-item question" name="edit_question" contenteditable>{{question}}</td>
+    <td class="question-item answer" name="edit_question" contenteditable>{{correct_answer}}</td>
+    <td>
+      <select name="difficulty" class="difficulty">
+        <option value="na">Select...</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+        <option value="na">N/A</option>
+      </select>
+    </td>
+    <td><span name="update_question"><img src="/update_btn2.png" class="update-question hide"></span><span><img src="/delete_btn2.png" class="edit-delete" id={{_id}}></span></td>
+  </tr>
+</template>
+
+<template name="ManageForms">
+  <div class="body-buffer">
+    <div class="add-form-container">
+      <div id="add-form-box">
+        <h2>Add New Form</h2>
+          <table class="forms-table">
+            <th></th>
+            <th></th>
+            <tr>
+              <td>Name of Position:</td>
+              <td><input id="position-name"><button type=button name="submit_new" id="submit-new">submit</button></td> 
+            </tr>
+          </table>
+        </div>
+        <hr id="form-separator">
+        <table class="forms-table">
+          <th>Current Forms</th>
+          <th></th>
+          {{#each items}}
+            {{> FormItem}}
+          {{/each}}
+        </table>
+      </div>
+  </div>
+</template>
+
+<template name="FormItem">
+  <tr>
+    <td><a href="#" name="new-screen" class="form-link">{{position_name}}</a></td>
+    <td class="form-btn-container"><a href="#" name="edit"><img src="/edit_btn.png" class="form_btn"></a><a href="#" name="dash_link" ><img src="/dashboard_btn.png" class="form_btn"></a><a href="#" name="delete"><img src="/delete_btn.png" class="form_btn"></a></td>
+  </tr>
+</template>
+
+<template name="Roles">
+  {{> Screens}}
+  <div class="stored-container">
+    <h3 class="role-title">{{position_name}}</h3>
+    <div>
+      <table class="table role-dash-table">
+        <th>Name</th>
+        <th>Date Screened</th>
+        <th>Prescreen</th>
+        <th>Owner</th>
+        <th></th>
+        {{#each screen_bundle}}
+          {{> RoleItem}}
+        {{/each}}
+      </table>
+    </div>
+  </div>
+</template>
+
+<template name="RoleItem">
+  <tr>
+    <td>{{name}}</td>
+    <td>{{created_at}}</td>
+    <td><a href="/screens/{{screen_id}}">http://prn-prescrns01.thefacebook.com/screens/{{screen_id}}</a></td>
+    <td>{{owner}}</td>
+    <td><button type="button" class="delete">delete</button><button type="button" class="claim">claim</button></td>
+  </tr>
+</template>
+
+<template name="Search">
+  <div id="search-container">
+    <div class="search-box">
+      <h3 class="search-header">Search</h3>
+      <div>
+        <table class="table role-dash-table">
+          <th>Name</th>
+          <th>Owner</th>
+          <th>Role</th>
+          <th></th>
+          <tr>
+            <td><input id="search-name"></td>
+            <td><select id="search-owner">
+              <option value=""></option>
+              {{#each owners}}
+                {{> Owners}}
+              {{/each}}
+            </select></td>
+            <td><select id="search-role">
+              <option value=""></option>
+              {{#each roles}}
+                {{> SearchRoles}}
+              {{/each}}
+            </select></td>
+            <td><button type="button" id="search-bttn" name="search_bttn">Search</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="results-container">
+    <h5 id="no-results">Your search did not return any results. If you searched for a name, please double check the spelling.</h5>
+    <h4>Results</h4>
+    <table class="table results-table">
+      <th class="result-table-header">Name</th>
+      <th class="result-table-header">Role</th>
+      <th class="result-table-header">Date Screened</th>
+      <th class="result-table-header">Link</th>
+      <th class="result-table-header">Owner</th>
+      <th class="result-table-header"></th>
+    </table>
+  </div>
+</template>
+
+<template name="SearchRoles">
+  <option value="{{role}}">{{position_name}}</option>
+</template>
+
+<template name="Owners">
+  <option value="{{name}}">{{name}}</option>
+</template>
+
+<template name="Dashboards">
+  <h1 id="loading">Loading...</h1>
+    {{#each items}}
+      {{>DashSelect}}
+    {{/each}}
+</template>
+
+<template name="DashSelect">
+  <div class="dash-div">
+    <h4 class="dash-header" name="init_dash">{{question}}</h4>
+    <div class="stats-container hide">
+      <h4 class="times-asked-header">Total times asked: {{times_asked}}</h4>
+      {{>Chart}}
+    </div>
+  </div>
+</template>
+
+<template name="Chart">
+  <h5 class="correct-header">Answered Correctly: {{right}}</h5>
+  <span>Offers Extended: {{correct_offers}}</span>
+  <h5 class="incorrect-header">Answered Incorrectly: {{wrong}}</h5>
+  <span>Offers Extended: {{incorrect_offers}}</span>
+  <div class="chart-container">
+    <canvas id="a{{q_id}}" width="600" height="300"></canvas>
+    <canvas id="b{{q_id}}" width="600" height="300"></canvas>
+  </div>
+  <div class="dash-tables">
+    {{> Tables}}
+  </div>
+</template>
+
+<template name="Tables">
+  <table class="table dash-table1">
+    <th>Prescreen</th>
+    <th>Initial</th>
+    <th>Follow Up</th>
+    <th>Network</th>
+    <th>Systems</th>
+    <th>Ninja</th>
+    <th>Pirate</th>
+    <th>Jedi</th>
+    <tr class="pass-color">
+      <td class="corr-pre-pass"></td>
+      <td class="corr-i-pass"></td>
+      <td class="corr-fu-pass"></td>
+      <td class="corr-net-pass"></td>
+      <td class="corr-sys-pass"></td>
+      <td class="corr-nin-pass"></td>
+      <td class="corr-pir-pass"></td>
+      <td class="corr-jed-pass"></td>
+    </tr>
+    <tr class="fail-color">
+      <td class="corr-pre-fail"></td>
+      <td class="corr-i-fail"></td>
+      <td class="corr-fu-fail"></td>
+      <td class="corr-net-fail"></td>
+      <td class="corr-sys-fail"></td>
+      <td class="corr-nin-fail"></td>
+      <td class="corr-pir-fail"></td>
+      <td class="corr-jed-fail"></td>
+    </tr>
+  </table>
+  <table class="table dash-table2">
+    <th>Prescreen</th>
+    <th>Initial</th>
+    <th>Follow Up</th>
+    <th>Network</th>
+    <th>Systems</th>
+    <th>Ninja</th>
+    <th>Pirate</th>
+    <th>Jedi</th>
+    <tr class="pass-color">
+      <td class="inc-pre-pass"></td>
+      <td class="inc-i-pass"></td>
+      <td class="inc-fu-pass"></td>
+      <td class="inc-net-pass"></td>
+      <td class="inc-sys-pass"></td>
+      <td class="inc-nin-pass"></td>
+      <td class="inc-pir-pass"></td>
+      <td class="inc-jed-pass"></td>
+    </tr>
+    <tr class="fail-color">
+      <td class="inc-pre-fail"></td>
+      <td class="inc-i-fail"></td>
+      <td class="inc-fu-fail"></td>
+      <td class="inc-net-fail"></td>
+      <td class="inc-sys-fail"></td>
+      <td class="inc-nin-fail"></td>
+      <td class="inc-pir-fail"></td>
+      <td class="inc-jed-fail"></td>
+    </tr>
+  </table>
+</template>
+
